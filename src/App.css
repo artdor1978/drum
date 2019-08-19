@@ -45,3 +45,8 @@ body{
  p {
  	font-size: 0.7em;
  }
+ #innerText {
+ 	color:#607D8B;
+ 	font-size: 1.2em;
+ 	letter-spacing: 2px;
+ }

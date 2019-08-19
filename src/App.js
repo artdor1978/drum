@@ -58,10 +58,32 @@ const bankOne = [{
   },
 ];
 
-const TriggerKey = (props) => {
+const DrawDrum = (props) => {
+    return (
+        <div id="drum-machine">
+          <h1>Drum Machine</h1>
+          <div id="display">
+            {props.list.map(item =>
+              <div 
+                className="drum-pad" 
+                style={{backgroundColor:item.color}} 
+                id={item.id}
+                onClick={() => props.sound(item.keyTrigger, item.id)}
+                >
+                  {item.keyTrigger}
+                  <audio src={item.url} className="clip" id={item.keyTrigger}></audio>
+              </div>
+            )}
+          <InnerText text={props.text} /> 
+          </div>
+          <p>artdor1978</p>
+        </div>
+    );
+ };
+
+const InnerText = (props) => {
   return (
-    <p>{this.props.keyCode}</p>
-  );
+    <span id="innerText"> {props.text} </span>)  
 };
 
 class App extends React.Component {
@@ -79,36 +101,20 @@ class App extends React.Component {
   componentWillUnmount() {
     document.removeEventListener("keydown", this.handleKeyPress)
   }
-  playSound(id) {
+  playSound(id, text) {
     document.getElementById(id).play();
+    this.setState ({
+       innerText: text,
+     });
   }
   handleKeyPress(e) {
-    console.log(e.keyCode,this.state);
-    if (e.keyCode === this.props.keyCode) {
-      this.playSound();
-    }
+    const updatedList = this.state.list.filter(item => item.keyCode === e.keyCode);
+    this.playSound(updatedList[0].keyTrigger,updatedList[0].id);
   }
   render() {
   return (
     <div className="App">
-      <div id="drum-machine">
-          <h1>Drum Machine</h1>
-          <div id="display">
-            {this.state.list.map(item =>
-              <div 
-                className="drum-pad" 
-                style={{backgroundColor:item.color}} 
-                id={item.id}
-                onClick={() => this.playSound(item.keyTrigger)}
-                >
-                  {item.keyTrigger}
-                  <audio src={item.url} className="clip" id={item.keyTrigger}></audio>
-              </div>
-            )}
-          </div>
-          <p>artdor1978</p>
-          <TriggerKey />
-      </div>
+      <DrawDrum list={this.state.list} sound={this.playSound} text={this.state.innerText}/>
     </div>
   );
   }
